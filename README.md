@@ -14,13 +14,7 @@ This processor executes the full RV32I instruction set in a single clock cycle p
 - FPGA implementation on Altera DE2
 
 ## Architecture
-
-```
-![single-cycle](https://github.com/user-attachments/assets/fad3056f-0cfa-4a9b-ac6c-8dc3bcbe3903)
-
-
-
-```
+![Single Cycle Processor Architecture](https://github.com/user-attachments/assets/fad3056f-0cfa-4a9b-ac6c-8dc3bcbe3903)
 
 **Execution Flow:**
 1. Fetch instruction from IMEM
