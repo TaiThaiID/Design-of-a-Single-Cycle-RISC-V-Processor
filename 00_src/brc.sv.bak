@@ -1,0 +1,51 @@
+module brc (
+    input  logic [31:0] i_rs1_data,
+    input  logic [31:0] i_rs2_data,
+    input  logic        i_br_un,
+    output logic        o_br_less,
+    output logic        o_br_equal
+);
+
+    // --- Internal Signals ---
+    logic [31:0] sum;          // Sub result
+    logic        c_out;        // Carry from the final Adder
+    logic        overflow;     // Overflow for signed
+    logic        signed_less;  // Result of signed commparison
+    logic        unsigned_less;// Result of unsigned commparison
+
+    // Sign bits for readability
+    assign        s1_sign = i_rs1_data[31];
+    assign        s2_sign = i_rs2_data[31];
+    assign        sum_sign = sum[31];
+
+    // --- Subtraction using the provided 32-bit adder ---
+    // rs1 - rs2 = rs1 + (~rs2) + 1 (Cin = 1).
+    adder32 u_subtractor (
+        .a      (i_rs1_data),
+        .b      (i_rs2_data),
+        .c_in   (1'b1),
+        .s	    (sum),
+        .c_out  (c_out)
+    );
+
+    // --- Equality Check ---
+    // rs1 == rs2 only when sum = (rs1 - rs2) == 0.
+    assign o_br_equal = ~|sum;
+
+    // --- Less Than Check ---
+
+    // 1. Unsigned comparison (i_br_un = 0)
+    // rs1 < rs2 (unsigned) when borrow exist, so c_out = 0.
+    assign unsigned_less = ~c_out;
+
+    // 2. Signed comparison (i_br_un = 1)
+    // Overflow occurs when the signs of the two operands are different AND the result sign is different from the first operand sign.
+    assign overflow = (s1_sign ^ s2_sign) & (s1_sign ^ sum_sign);
+    // The signed less is the XOR of the result sign bit and the overflow flag.
+    assign signed_less = sum_sign ^ overflow;
+
+    // 3. Final Selection
+    // Use MUX to select the final result based on i_br_un.
+    assign o_br_less = i_br_un ? signed_less : unsigned_less;
+
+endmodule
