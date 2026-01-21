@@ -16,7 +16,7 @@ This processor executes the full RV32I instruction set in a single clock cycle p
 ## Architecture
 
 ```
-![single-cycle (1)](https://github.com/user-attachments/assets/0b59d708-61a0-4e27-adf3-fb07ff421863)
+![Image](https://github.com/user-attachments/assets/b06a1f85-b51e-4b35-8c25-9e24745f5ea4)
 
 
 ```
